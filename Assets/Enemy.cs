@@ -19,7 +19,6 @@ public class Enemy : MonoBehaviour
         Renderer rend;
             
         State state;
-        
         public void ChangeColor(Color newColor)
         {
                 rend.material.SetColor("_Color", newColor);
@@ -38,6 +37,9 @@ public class Enemy : MonoBehaviour
                 rend = GetComponent<Renderer>();
                 
                 player = GameObject.Find("Player").transform;
+                //콜라이더 생성
+                CreateRangeSphereCollider("AttackRangeCollider", AttackRange, EnemyEventType.EnterAttackRange, EnemyEventType.ExitAttackRange);
+                CreateRangeSphereCollider("ApproachRangeCollider", ApproachRange, EnemyEventType.EnterApproachRange, EnemyEventType.ExitApproachRange);
 
                 state = new IdleState(this, player);
                 state.Enter();
@@ -55,7 +57,21 @@ public class Enemy : MonoBehaviour
                 }
                 state.DoAction();
         }
+        //스피어 콜라이더 생성 함수
+        private void CreateRangeSphereCollider(string name, float range, EnemyEventType enterEvent, EnemyEventType extiEvent)
+        {
+            GameObject go = new GameObject(name);
+            go.transform.SetParent(this.transform, false);
 
+            SphereCollider collider = go.AddComponent<SphereCollider>();
+            collider.isTrigger = true;
+            collider.enabled = true;
+            collider.radius = range;
+            //각 콜라이더에 트리거 등록
+            EventTriggerManager trigger = go.AddComponent<EventTriggerManager>();
+            trigger.Register(player.gameObject, this, enterEvent, extiEvent);
+              
+        }
 
         public void AttackPlayer()
         {
@@ -69,7 +85,7 @@ public class Enemy : MonoBehaviour
                 if (Hp < 0f) Hp = 0f;
         }
 
-
+        // 기존 APIs
         public bool IsPlayerInApproachRange()
         {
                 return Vector3.Distance(player.position, transform.position) <= ApproachRange;
