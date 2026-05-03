@@ -19,6 +19,12 @@ public class Enemy : MonoBehaviour
         Renderer rend;
             
         State state;
+        //이벤트 큐
+        private readonly Queue<EnemyEventType> events = new Queue<EnemyEventType>();
+        public void TriggerEvent(EnemyEventType type) => events.Enqueue(type);
+        public bool HasEvents => events.Count > 0;
+        public EnemyEventType DequeueEvent() => events.Dequeue();
+
         public void ChangeColor(Color newColor)
         {
                 rend.material.SetColor("_Color", newColor);

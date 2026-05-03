@@ -12,7 +12,24 @@ public abstract class State
         this.enemy = enemy; 
         this.player = player; 
     }
+    //
+    protected State ActivateState()
+    {
+        while(enemy.HasEvents)
+        {
+            EnemyEventType type = enemy.DequeueEvent();
+            State next = OnEvent(type);
+            if (next != null) {return next;}
 
+        }
+
+        return null;
+    }
+
+    protected virtual State OnEvent(EnemyEventType type)
+    {
+        return null;
+    }
     protected Vector3 getRandomLocation(float radius)
     {
         return enemy.transform.position

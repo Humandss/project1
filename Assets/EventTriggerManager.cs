@@ -23,15 +23,17 @@ public class EventTriggerManager : MonoBehaviour
         this.exitEvent = exitEvent;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision == null) return;
-        Debug.Log($"enterEvent :{enterEvent}");
+        if (other == null || other.gameObject != target) return;
+        enemy.TriggerEvent(enterEvent);
+        Debug.Log($"enterEvent : {enterEvent}");
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision == null) return;
-        Debug.Log($"exitEvent :{exitEvent}");
+        if (other == null || other.gameObject != target) return;
+        enemy.TriggerEvent(exitEvent);
+        Debug.Log($"exitEvent : {exitEvent}");
     }
 }
