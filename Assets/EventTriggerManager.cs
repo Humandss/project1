@@ -22,18 +22,21 @@ public class EventTriggerManager : MonoBehaviour
         this.enterEvent = enterEvent;
         this.exitEvent = exitEvent;
     }
-
+    /// <summary>
+    /// Trigger 발동되면 큐에 등록
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other == null || other.gameObject != target) return;
-        enemy.TriggerEvent(enterEvent);
+        enemy.EnqueueEvent(enterEvent);
         Debug.Log($"enterEvent : {enterEvent}");
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other == null || other.gameObject != target) return;
-        enemy.TriggerEvent(exitEvent);
+        enemy.EnqueueEvent(exitEvent);
         Debug.Log($"exitEvent : {exitEvent}");
     }
 }

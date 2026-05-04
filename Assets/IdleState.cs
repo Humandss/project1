@@ -19,10 +19,15 @@ public class IdleState : State
     // implement
     public override State HandleInput()
     {
-        if (enemy.IsPlayerInApproachRange())
-        {
-            return new ApproachState(enemy, player);
-        }
+        //기존 코드
+        //if (enemy.IsPlayerInApproachRange())
+        // {
+        // return new ApproachState(enemy, player);
+        // }
+
+        State state = DequeueAndActivateState();
+        if (state != null) return state;
+ 
         if (currentTimer >= resetTimer)
         {
             currentTimer = 0f;
@@ -34,7 +39,12 @@ public class IdleState : State
         }        
         return null;
     }
-    
+
+    public override State OnEvent(EnemyEventType type) => type switch
+    {
+        EnemyEventType.EnterApproachRange => new ApproachState(enemy, player),
+        _ => null
+    };
     // implement
     public override void DoAction()
     {

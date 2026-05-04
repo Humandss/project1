@@ -13,10 +13,11 @@ public abstract class State
         this.player = player; 
     }
     //
-    protected State ActivateState()
+    protected State DequeueAndActivateState()
     {
         while(enemy.HasEvents)
         {
+            //Å¥°¡ ºô´ë±îÁö ÇÏ³ª¾¿ Å¥¿¡¼­ ²¨³»¿È
             EnemyEventType type = enemy.DequeueEvent();
             State next = OnEvent(type);
             if (next != null) {return next;}
@@ -26,10 +27,6 @@ public abstract class State
         return null;
     }
 
-    protected virtual State OnEvent(EnemyEventType type)
-    {
-        return null;
-    }
     protected Vector3 getRandomLocation(float radius)
     {
         return enemy.transform.position
@@ -37,6 +34,8 @@ public abstract class State
     }    
 
     public abstract State HandleInput();
+
+    public abstract State OnEvent(EnemyEventType type);
 
     public abstract void DoAction();
 

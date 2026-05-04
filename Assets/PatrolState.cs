@@ -48,10 +48,13 @@ public class PatrolState : State
     // implement
     public override State HandleInput()
     {
-        if (enemy.IsPlayerInApproachRange())
-        {
-            return new ApproachState(enemy, player);
-        }
+        State state = DequeueAndActivateState();
+        if (state != null) return state;
+
+        //if (enemy.IsPlayerInApproachRange())
+       // {
+           // return new ApproachState(enemy, player);
+       // }
         if (n_movements == wayPoints.Length)
         {
             n_movements = 0;
@@ -59,7 +62,11 @@ public class PatrolState : State
         }
         return null;
     }
-    
+    public override State OnEvent(EnemyEventType type) => type switch
+    {
+        EnemyEventType.EnterApproachRange => new ApproachState(enemy, player),
+        _ => null
+    };
     // implement
     public override void DoAction()
     {

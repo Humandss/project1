@@ -14,17 +14,25 @@ public class AttackState : State
     // implement
     public override State HandleInput()
     {
+        State state = DequeueAndActivateState();
+        if (state != null) return state;
+
         if (enemy.Hp <= 10f)
         {
             return new RunAwayState(enemy, player);
         }
+        /*
         if (enemy.IsPlayerOutOfAttackRange())
         {
             return new ApproachState(enemy, player);
-        }
+        }*/
         return null;
     }
-    
+    public override State OnEvent(EnemyEventType type) => type switch
+    {
+        EnemyEventType.ExitAttackRange => new ApproachState(enemy, player),
+        _ => null
+    };
     // implement
     public override void DoAction()
     {

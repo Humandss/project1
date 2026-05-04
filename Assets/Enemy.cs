@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
         State state;
         //이벤트 큐
         private readonly Queue<EnemyEventType> events = new Queue<EnemyEventType>();
-        public void TriggerEvent(EnemyEventType type) => events.Enqueue(type);
+        public void EnqueueEvent(EnemyEventType type) => events.Enqueue(type);
         public bool HasEvents => events.Count > 0;
         public EnemyEventType DequeueEvent() => events.Dequeue();
 

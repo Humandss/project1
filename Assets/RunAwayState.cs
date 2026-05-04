@@ -12,11 +12,16 @@ public class RunAwayState : State
     // implement
     public override State HandleInput()
     {
+        DequeueAndActivateState();
+
         if (enemy.Hp >= 60f)
             return new ApproachState(enemy, player);
         return null;
     }
-    
+    public override State OnEvent(EnemyEventType type) => type switch
+    {
+        _ => null
+    };
     // implement
     public override void DoAction()
     {

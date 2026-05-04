@@ -11,6 +11,7 @@ public class ApproachState : State
     // implement
     public override State HandleInput()
     {
+        /*
         if (enemy.IsPlayerInAttackRange())
         {
             return new AttackState(enemy, player);
@@ -19,9 +20,18 @@ public class ApproachState : State
         {
             return new GoHomeState(enemy, player);
         }
+        */
+        State state = DequeueAndActivateState();
+        if(state != null) return state;
         return null;
     }
-    
+
+    public override State OnEvent(EnemyEventType type) => type switch
+    {
+        EnemyEventType.EnterAttackRange => new AttackState(enemy, player),
+        EnemyEventType.ExitApproachRange => new GoHomeState(enemy, player),
+        _ => null
+    };
     // implement
     public override void DoAction()
     {

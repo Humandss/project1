@@ -12,15 +12,21 @@ public class GoHomeState : State
     // implement
     public override State HandleInput()
     {
+        State state = DequeueAndActivateState();
+        if (state != null) return state;
+
         if (enemy.IsInSpawnLocation())
             return new IdleState(enemy, player);
-        if (enemy.IsPlayerInApproachRange())
-            return new ApproachState(enemy, player);
+  
         if (enemy.Hp <= 10f)
             return new RunAwayState(enemy, player);
         return null;
     }
-    
+    public override State OnEvent(EnemyEventType type) => type switch
+    {
+        EnemyEventType.EnterApproachRange => new ApproachState(enemy, player),
+        _ => null
+    };
     // implement
     public override void DoAction()
     {
